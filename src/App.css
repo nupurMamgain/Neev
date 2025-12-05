@@ -1,0 +1,9 @@
+/* App.css (ya index.css) */
+@import "tailwindcss";
+
+
+body {
+  overflow-x: hidden;
+}
+
+/* Tailwind already handles responsiveness */
