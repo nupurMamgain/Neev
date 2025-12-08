@@ -5,15 +5,14 @@ import Features from "../components/Features.jsx";
 import Mission from "../components/Xmission.jsx";
 import Footer from "../components/Footer.jsx";
 
-
 const Xhome = () => {
   return (
-      <div>
+    <div className="bg-white min-h-screen">
       <Navbar />
-      <Hero />        {/* Hero section with animated slider */}
-      <Features />    {/* Static glass section */}
-      <Mission />     {/* Static glass section */}
-      {/* <Footer /> */}
+      <Hero />
+      <Features />
+      <Mission />
+      <Footer />
     </div>
   )
 }
