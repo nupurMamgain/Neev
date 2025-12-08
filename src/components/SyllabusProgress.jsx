@@ -1,3 +1,4 @@
+//CHILD CLASS//
 // src/components/SyllabusProgress.jsx
 import React from 'react';
 

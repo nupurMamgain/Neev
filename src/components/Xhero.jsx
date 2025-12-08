@@ -1,4 +1,5 @@
-import React from "react";
+//LANDING//
+// import React from "react";
 import ImageSlider from "./Imageslider";
 
 const Hero = () => {

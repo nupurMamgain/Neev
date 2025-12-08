@@ -1,4 +1,5 @@
-// src/components/ScheduleCard.jsx
+//CLASSSES//
+// src/components/ScheduleCard.jsx//
 import React from 'react';
 
 const ScheduleCard = ({ schedule, recommendations, videos }) => {

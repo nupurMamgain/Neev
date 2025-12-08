@@ -1,3 +1,4 @@
+//SIGN IN CHILDREN//
 // src/components/StatsTestimonial.jsx
 import React from 'react';
 import { AcademicCapIcon, BoltIcon, LanguageIcon, ChartBarIcon, BriefcaseIcon } from '@heroicons/react/24/outline'; // Assumed icons

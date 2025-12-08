@@ -1,7 +1,7 @@
 //CLASS DASHBOARD//
 // src/components/CNavbar.jsx
 import React from 'react';
-
+import { Link } from 'react-router-dom';
 const CNavbar = ({ name }) => {
   return (
     <nav className="w-full bg-white shadow-sm sticky top-0 z-10 border-b border-gray-100">
@@ -25,7 +25,7 @@ const CNavbar = ({ name }) => {
               <span>Dashboard</span>
             </a>
             <a href="#" className="hover:text-gray-900">Study Materials</a>
-            <a href="#" className="hover:text-gray-900">Quizzes</a>
+            <Link to="/quiz-page" className="hover:text-gray-900">Quizzes</Link>
             <a href="#" className="hover:text-gray-900">About Us</a>
           </div>
         </div>
