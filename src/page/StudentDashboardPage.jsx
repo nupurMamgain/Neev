@@ -82,7 +82,7 @@ const StudentDashboardPage = () => {
               videos={data.oneShotVideos} // Passing videos here as well for full rendering
             />
             
-            {/* Badges and Leaderboard */}
+            {/* Badges aur Leaderboard */}
             <LeaderboardCard 
               badges={data.badges} 
               leaderboard={data.leaderboard} 

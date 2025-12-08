@@ -1,4 +1,5 @@
-// src/components/StatCard.jsx
+//CHILD CLASS//
+// // src/components/StatCard.jsx
 import React from 'react';
 
 const StatCard = ({ title, value, icon, color }) => {
