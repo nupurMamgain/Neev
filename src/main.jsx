@@ -8,6 +8,7 @@ import Home from "./page/Xhome";
 import LoginPage from "./page/LoginPage";
 import TeacherRegisterPage from "./page/TeacherRegisterPage";
 import SignupPage from "./page/SignupPage"
+import StudentDashboardPage from "./page/StudentDashboardPage";
 
 createRoot(document.getElementById("root")).render(
   <React.StrictMode>
@@ -19,6 +20,8 @@ createRoot(document.getElementById("root")).render(
           <Route path="login" element={<LoginPage />} />
           <Route path="student-register" element={<SignupPage/>} />
           <Route path="teacher-register" element={<TeacherRegisterPage />} />
+          <Route path="student-dashboard" element={<StudentDashboardPage />} />
+
         </Route>
       </Routes>
     </BrowserRouter>

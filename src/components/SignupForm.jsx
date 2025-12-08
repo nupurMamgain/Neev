@@ -1,3 +1,4 @@
+//STUDENT SIGN IN//
 import React, { useState } from 'react'; // 👈 useState hook को इंपोर्ट किया
 import { UserPlus } from 'lucide-react'; 
 
@@ -96,21 +97,26 @@ const SignupForm = () => {
                 <div className="flex space-x-4">
                   {/* Select Your Class Dropdown */}
                   <div className="relative w-1/2">
-                    <select name='classes' className=" w-full px-4 py-3 border border-gray-300 rounded-lg appearance-none text-gray-400 text-sm bg-white focus:outline-none focus:ring-1 focus:ring-blue-500" required>
-                        <option value="" disabled selected>Select your class *</option>
-                        <option value="1">Class 1</option>
-                        <option value="2">Class 2</option>
-                        <option value="3">Class 3</option>
-                        <option value="4">Class 4</option>
-                        <option value="5">Class 5</option>
-                        <option value="6">Class 6</option>
-                        <option value="7">Class 7</option>
-                        <option value="8">Class 8</option>
-                        <option value="9">Class 9</option>
-                        <option value="10">Class 10</option>
-                        <option value="11">Class 11</option>
-                        <option value="12">Class 12</option>
-                    </select>
+                    <select 
+  name='classes' 
+  className="w-full px-4 py-3 border border-gray-300 rounded-lg appearance-none text-gray-400 text-sm bg-white focus:outline-none focus:ring-1 focus:ring-blue-500" 
+  required
+  defaultValue=""  // ✅ Add this line
+>
+  <option value="" disabled>Select your class *</option> {/* ✅ Remove 'selected' from here */}
+  <option value="1">Class 1</option>
+  <option value="2">Class 2</option>
+  <option value="3">Class 3</option>
+  <option value="4">Class 4</option>
+  <option value="5">Class 5</option>
+  <option value="6">Class 6</option>
+  <option value="7">Class 7</option>
+  <option value="8">Class 8</option>
+  <option value="9">Class 9</option>
+  <option value="10">Class 10</option>
+  <option value="11">Class 11</option>
+  <option value="12">Class 12</option>
+</select>
                     <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700">
                         <svg className="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
                     </div>

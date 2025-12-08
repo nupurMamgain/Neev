@@ -1,8 +1,12 @@
+//LOGIN PAGE//
 import React, { useState } from 'react';
 import { EyeIcon } from '@heroicons/react/24/outline'; // Assumed icon library
+import { useNavigate } from "react-router-dom";
 
 function SignInCard() {
   const [activeTab, setActiveTab] = useState('English');
+   const navigate = useNavigate();
+
   const [showPassword, setShowPassword] = useState(false);
 
   const tabs = ['English', 'हिन्दी', 'ਪੰਜਾਬੀ'];
@@ -36,7 +40,8 @@ function SignInCard() {
       </div>
 
       {/* 🔑 Login Form */}
-      <form>
+      <form onSubmit={(e) => { e.preventDefault(); navigate("/student-dashboard"); }}>
+
         {/* Email Field */}
         <div className="mb-4">
           <label className="block text-sm font-medium text-gray-700 mb-1">

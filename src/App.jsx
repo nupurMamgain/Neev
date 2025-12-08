@@ -1,20 +1,26 @@
 import React from "react";
-import { Outlet } from "react-router-dom";
-import Navbar from "./components/Xnavbar";
+import { Outlet, useLocation } from "react-router-dom";
+import Xnavbar from "./components/Xnavbar";
 import Footer from "./components/Footer";
 import "./App.css"
 
 const App = () => {
+  const location = useLocation();
+  
+  // Don't show Xnavbar on dashboard pages
+  const showXnavbar = !location.pathname.includes("dashboard");
+  
   return (
     <>
-     {/* Navbar visible on all pages */}
-    
+      {/* Show Xnavbar only on non-dashboard pages */}
+      {showXnavbar && <Xnavbar />}
       
-      <main >
-        <Outlet /> {/* Pages will render here */}
+      <main>
+        <Outlet />
       </main>
 
-      <Footer />
+      {/* Show Footer only on non-dashboard pages */}
+      {showXnavbar && <Footer />}
     </>
   );
 };
