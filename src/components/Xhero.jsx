@@ -8,7 +8,7 @@ const Hero = () => {
         <div className="text-center max-w-3xl mx-auto">
           {/* Badge */}
           <span className="inline-block px-4 py-1.5 bg-blue-50 text-blue-600 text-sm font-medium rounded-full mb-6">
-            Now available in 3 languages
+            Soon to be available in 3 languages
           </span>
 
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-bold text-gray-900 leading-tight mb-6">

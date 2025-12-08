@@ -12,7 +12,7 @@ const Xhome = () => {
       <Hero />
       <Features />
       <Mission />
-      <Footer />
+      {/* <Footer /> */}
     </div>
   )
 }

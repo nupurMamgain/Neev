@@ -33,7 +33,8 @@ const QuizPage = () => {
     setQuizState('loading');
     setError(null);
     try {
-      const response = await fetch('/api/generate-mcqs/', {
+
+      const response = await fetch('/local/generate-mcqs/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ difficulty_level: 8, pickle_filename: 'data.pkl' }),
