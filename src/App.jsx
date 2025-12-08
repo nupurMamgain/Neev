@@ -12,7 +12,7 @@ const App = () => {
   
   return (
     <> 
-      {showXnavbar && <Xnavbar />}
+      {/* {showXnavbar && <Xnavbar />} */}
       <main>
         <Outlet />
       </main>
