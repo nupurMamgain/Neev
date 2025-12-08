@@ -1,9 +1,11 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const SignupPage = () => {
+  const navigate = useNavigate();
+
   const [formData, setFormData] = useState({
-    username: '',
+    name: '',
     email: '',
     password: '',
     password2: '',
@@ -11,13 +13,65 @@ const SignupPage = () => {
     Ph_num: ''
   });
 
+  const [loading, setLoading] = useState(false);
+  const [errorMsg, setErrorMsg] = useState("");
+  const [successMsg, setSuccessMsg] = useState("");
+
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
+    setErrorMsg("");
+    setSuccessMsg("");
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
+    setErrorMsg("");
+    setSuccessMsg("");
+
+    if (formData.password !== formData.password2) {
+      setErrorMsg("Passwords do not match");
+      return;
+    }
+
+    setLoading(true);
+    try {
+      const response = await fetch('/api/signup/', {
+        // 👉 yahan apna actual endpoint path lagana:
+        // e.g. '/api/register/', '/api/student-register/' etc
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          name: formData.name,
+          email: formData.email,
+          password: formData.password,
+          class_obj: formData.classes
+          //Ph_num: formData.Ph_num//
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.message ||
+          data.detail ||
+          "Signup failed. Please check the details and try again."
+        );
+      }
+
+      setSuccessMsg("Account created successfully! You can now log in.");
+      // thoda delay ke baad login pe bhejna ho to:
+      // setTimeout(() => navigate('/login'), 1000);
+      navigate('/login');
+
+    } catch (err) {
+      console.error(err);
+      setErrorMsg(err.message || "Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -44,14 +98,26 @@ const SignupPage = () => {
             <p className="text-gray-500 mt-1">Join NEEV and start learning</p>
           </div>
 
+          {/* 🔴 Error / 🟢 Success */}
+          {errorMsg && (
+            <div className="mb-4 text-sm text-red-600 bg-red-50 border border-red-200 rounded-md px-3 py-2">
+              {errorMsg}
+            </div>
+          )}
+          {successMsg && (
+            <div className="mb-4 text-sm text-green-700 bg-green-50 border border-green-200 rounded-md px-3 py-2">
+              {successMsg}
+            </div>
+          )}
+
           {/* Form */}
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form  className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-2">Full Name *</label>
               <input
                 type="text"
-                name="username"
-                value={formData.username}
+                name="name"
+                value={formData.name}
                 onChange={handleChange}
                 placeholder="Enter your full name"
                 className="w-full px-4 py-3 border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
@@ -84,6 +150,13 @@ const SignupPage = () => {
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   required
                 />
+                {/* Password validation logic */}
+                {formData.password && formData.password2 && formData.password !== formData.password2 && (
+                  <p className="text-red-600 text-sm mt-1">Passwords do not match</p>
+                )}
+                {formData.password && formData.password2 && formData.password === formData.password2 && (
+                  <p className="text-green-600 text-sm mt-1">Passwords match</p>
+                )}
               </div>
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Confirm *</label>
@@ -96,6 +169,13 @@ const SignupPage = () => {
                   className="w-full px-4 py-3 border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                   required
                 />
+                {/* Password validation logic */}
+                {formData.password && formData.password2 && formData.password !== formData.password2 && (
+                  <p className="text-red-600 text-sm mt-1">Passwords do not match</p>
+                )}
+                {formData.password && formData.password2 && formData.password === formData.password2 && (
+                  <p className="text-green-600 text-sm mt-1">Passwords match</p>
+                )}
               </div>
             </div>
 
@@ -129,10 +209,11 @@ const SignupPage = () => {
             </div>
 
             <button
-              type="submit"
-              className="w-full py-3 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition-colors mt-6"
+              onClick={handleSubmit}
+              disabled={loading}
+              className="w-full py-3 bg-blue-600 text-white font-medium rounded-xl hover:bg-blue-700 transition-colors mt-6 disabled:opacity-70 disabled:cursor-not-allowed"
             >
-              Create Account
+              {loading ? "Creating Account..." : "Create Account"}
             </button>
           </form>
 
