@@ -10,7 +10,7 @@ const QuizCard = ({ subject, topic, time, color, showRecommendation, showButton 
           <p className="text-gray-700">
             {subject} - {time}
             <span className={`font-medium 'text-yellow-600' : 'text-green-600'}`}>
-              {difficulty}
+              {/* {difficulty?? 1} */}
             </span>
           </p>
           {showRecommendation && (

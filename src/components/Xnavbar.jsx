@@ -1,154 +1,55 @@
-//NAVBAR LANDING//
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
-import IDUpload from "./IDUpload.jsx"; 
 
 const Navbar = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isSignupDropdownOpen, setIsSignupDropdownOpen] = useState(false);
-
-  const toggleMenu = () => setIsMenuOpen(!isMenuOpen);
-  const toggleSignupDropdown = () => setIsSignupDropdownOpen(!isSignupDropdownOpen);
 
   return (
-    <nav className="w-full fixed top-0 left-0 bg-white/30 backdrop-blur-sm shadow-sm z-50">
-      <div className="max-w-7xl mx-auto px-4 py-2 flex items-center justify-between">
-        
-        {/* Logo */}
-        <Link to="/" className="flex items-center gap-2">
-          <img src="/images/neev2.png" alt="NEEV Logo" className="h-12" />
-        </Link>
-
-        {/* Desktop Navigation */}
-        <div className="hidden md:flex items-center gap-4">
-
-          <Link to="#features" className="px-3 py-1 rounded-md transition duration-300 bg-gray-100 text-black hover:bg-red-500 hover:text-white flex items-center gap-1">
-            <span className="text-lg">⚡</span> Features
+    <nav className="w-full fixed top-0 left-0 bg-white border-b border-gray-200 z-50">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4">
+        <div className="flex items-center justify-between">
+          {/* Logo */}
+          <Link to="/" className="flex items-center gap-2">
+            <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold">N</span>
+            </div>
+            <span className="font-semibold text-gray-900">NEEV</span>
           </Link>
 
-          <Link to="#mission" className="px-3 py-1 rounded-md transition duration-300 bg-gray-100 text-black hover:bg-red-500 hover:text-white flex items-center gap-1">
-            <span className="text-lg">🎯</span> Our Mission
-          </Link>
-
-          <Link to="#download" className="px-3 py-1 rounded-md transition duration-300 bg-gray-100 text-black hover:bg-red-500 hover:text-white flex items-center gap-1">
-            <span className="text-lg">📱</span> Download App
-          </Link>
-
-          <Link to="/login" className="px-3 py-1 rounded-md transition duration-300 bg-gray-100 text-black hover:bg-red-500 hover:text-white flex items-center gap-1">
-            <span className="text-lg">🔑</span> Login
-          </Link>
-
-          {/* Signup Dropdown */}
-          <div className="relative">
-            <button
-              onClick={toggleSignupDropdown}
-              className="bg-red-500 text-white px-4 py-2 rounded-md shadow-md hover:bg-red-600 transition flex items-center gap-1"
-            >
-              <span className="text-lg">➕</span> Register
-            </button>
-
-            {isSignupDropdownOpen && (
-              <div className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-100">
-                <Link
-                  to="/teacher-register"  // ✅ Updated route
-                  className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-red-500 hover:text-white"
-                  onClick={() => setIsSignupDropdownOpen(false)}
-                >
-                  <span className="mr-2">🧑‍🏫</span> Teacher Sign In
-                </Link>
-
-                <Link
-                  to="/student-register"
-                  className="flex items-center px-4 py-2 text-sm text-gray-700 hover:bg-red-500 hover:text-white"
-                  onClick={() => setIsSignupDropdownOpen(false)}
-                >
-                  <span className="mr-2">📚</span> Student Sign In
-                </Link>
-              </div>
-            )}
+          {/* Desktop Nav */}
+          <div className="hidden md:flex items-center gap-8">
+            <a href="#features" className="text-gray-600 hover:text-gray-900 text-sm font-medium">Features</a>
+            <a href="#mission" className="text-gray-600 hover:text-gray-900 text-sm font-medium">Our Mission</a>
+            <Link to="/login" className="text-gray-600 hover:text-gray-900 text-sm font-medium">Login</Link>
+            <Link to="/student-register" className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors">
+              Get Started
+            </Link>
           </div>
 
-        </div>
-
-        {/* Mobile Hamburger Button */}
-        <div className="md:hidden">
-          <button
-            onClick={toggleMenu}
-            className="px-3 py-2 text-2xl rounded-md bg-gray-100 text-black hover:bg-gray-200 shadow-sm"
-          >
-            ☰
+          {/* Mobile Menu Button */}
+          <button onClick={() => setIsMenuOpen(!isMenuOpen)} className="md:hidden p-2">
+            <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              {isMenuOpen ? (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+              ) : (
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M4 6h16M4 12h16M4 18h16" />
+              )}
+            </svg>
           </button>
         </div>
 
-      </div>
-
-      {/* Mobile Menu */}
-      {isMenuOpen && (
-        <div className="md:hidden absolute w-full bg-white shadow-lg py-2">
-
-          <Link to="#features" onClick={toggleMenu} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-            <span className="mr-2">⚡</span> Features
-          </Link>
-
-          <Link to="#mission" onClick={toggleMenu} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-            <span className="mr-2">🎯</span> Our Mission
-          </Link>
-
-          <Link to="#download" onClick={toggleMenu} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-            <span className="mr-2">📱</span> Download App
-          </Link>
-
-          <Link to="/login" onClick={toggleMenu} className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-            <span className="mr-2">🔑</span> Login
-          </Link>
-
-          {/* Mobile Signup Dropdown */}
-          <div className="relative">
-            <button
-              onClick={toggleSignupDropdown}
-              className="w-full text-left px-4 py-2 text-gray-700 hover:bg-gray-100"
-            >
-              <span className="mr-2">➕</span> Register
-            </button>
-
-            {isSignupDropdownOpen && (
-              <div className="pl-6">
-                <Link
-                  to="/teacher-register" // ✅ Updated route
-                  onClick={() => { toggleMenu(); setIsSignupDropdownOpen(false); }}
-                  className="block px-4 py-2 text-sm text-gray-600 hover:bg-gray-50"
-                >
-                  Teacher Sign In
-                </Link>
-
-                <Link
-                  to="/signup"
-                  onClick={() => { toggleMenu(); setIsSignupDropdownOpen(false); }}
-                  className="block px-4 py-2 text-sm text-gray-600 hover:bg-gray-50"
-                >
-                  Student Sign In
-                </Link>
-              </div>
-            )}
+        {/* Mobile Menu */}
+        {isMenuOpen && (
+          <div className="md:hidden pt-4 pb-2 border-t border-gray-100 mt-4">
+            <a href="#features" className="block py-2 text-gray-600 hover:text-gray-900">Features</a>
+            <a href="#mission" className="block py-2 text-gray-600 hover:text-gray-900">Our Mission</a>
+            <Link to="/login" className="block py-2 text-gray-600 hover:text-gray-900">Login</Link>
+            <Link to="/student-register" className="block mt-2 px-4 py-2 bg-blue-600 text-white text-center rounded-lg">
+              Get Started
+            </Link>
           </div>
-
-          <hr className="my-1" />
-
-          <Link to="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-            <span className="mr-2">🌙</span> Dark Mode
-          </Link>
-          <Link to="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-            <span className="mr-2">ℹ️</span> About
-          </Link>
-          <Link to="#" className="block px-4 py-2 text-gray-700 hover:bg-gray-100">
-            <span className="mr-2">⚙️</span> Settings
-          </Link>
-          <Link to="#" className="block px-4 py-2 text-red-600 hover:bg-gray-100">
-            <span className="mr-2">🚪</span> Logout
-          </Link>
-
-        </div>
-      )}
+        )}
+      </div>
     </nav>
   );
 };

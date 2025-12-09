@@ -1,0 +1,39 @@
+{
+  "name": "NEEV - Learning Platform",
+  "short_name": "NEEV",
+  "description": "An adaptive learning platform for students",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2563eb",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml",
+      "purpose": "any"
+    },
+    {
+      "src": "/icons/icon.svg",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    }
+  ],
+  "categories": ["education", "productivity"],
+  "screenshots": [],
+  "shortcuts": [
+    {
+      "name": "Dashboard",
+      "url": "/student-dashboard",
+      "description": "Go to your dashboard"
+    },
+    {
+      "name": "Take Quiz",
+      "url": "/quiz-page",
+      "description": "Start a quiz"
+    }
+  ]
+}
+
