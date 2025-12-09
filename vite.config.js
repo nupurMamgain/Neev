@@ -7,6 +7,7 @@ import tailwindcss from '@tailwindcss/vite'
 export default defineConfig({
   plugins: [react(),tailwindcss() ],
   server: {
+    host: true,
     proxy: {
       '/api': {
         target: 'http://10.133.7.29:8000',
@@ -18,7 +19,7 @@ export default defineConfig({
         rewrite: (path) => path.replace(/^\/local/, ''),
       },
       '/quiz': {
-        target: 'http://127.0.0.1:8000',
+        target: 'https://bonded-shanel-unhomological.ngrok-free.dev',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/quiz/, ''),
       },
