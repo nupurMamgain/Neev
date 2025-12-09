@@ -474,6 +474,56 @@ const StudentDashboardPage = () => {
               )}
             </div>
 
+            {/* Quick Quizzes */}
+            <div className="bg-white rounded-xl border border-gray-200 p-6">
+              <h2 className="font-semibold text-gray-900 mb-4">Quick Quizzes</h2>
+              <div className="grid grid-cols-2 gap-3">
+                <Link 
+                  to="/quiz-page?chapter=3&subject=1"
+                  className="p-4 bg-blue-50 border border-blue-200 rounded-xl hover:bg-blue-100 hover:shadow-md transition-all text-center group"
+                >
+                  <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
+                    <span className="text-2xl">📐</span>
+                  </div>
+                  <h3 className="font-medium text-blue-700 text-sm">Maths</h3>
+                  <p className="text-xs text-gray-500 mt-1">10 Questions</p>
+                </Link>
+                
+                <Link 
+                  to="/quiz-page?chapter=4&subject=3"
+                  className="p-4 bg-purple-50 border border-purple-200 rounded-xl hover:bg-purple-100 hover:shadow-md transition-all text-center group"
+                >
+                  <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
+                    <span className="text-2xl">📚</span>
+                  </div>
+                  <h3 className="font-medium text-purple-700 text-sm">Political Scince</h3>
+                  <p className="text-xs text-gray-500 mt-1">10 Questions</p>
+                </Link>
+                
+                <Link 
+                  to="/quiz-page?chapter=16&subject=16"
+                  className="p-4 bg-emerald-50 border border-emerald-200 rounded-xl hover:bg-emerald-100 hover:shadow-md transition-all text-center group"
+                >
+                  <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
+                    <span className="text-2xl">🗺️</span>
+                  </div>
+                  <h3 className="font-medium text-emerald-700 text-sm">Geography</h3>
+                  <p className="text-xs text-gray-500 mt-1">10 Questions</p>
+                </Link>
+                
+                <Link 
+                  to="/quiz-page?chapter=2&subject=2"
+                  className="p-4 bg-teal-50 border border-teal-200 rounded-xl hover:bg-teal-100 hover:shadow-md transition-all text-center group"
+                >
+                  <div className="w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
+                    <span className="text-2xl">🌍</span>
+                  </div>
+                  <h3 className="font-medium text-teal-700 text-sm">Social Science</h3>
+                  <p className="text-xs text-gray-500 mt-1">10 Questions</p>
+                </Link>
+              </div>
+            </div>
+
             {/* Daily Goal */}
             <div className="bg-white rounded-xl border border-gray-200 p-6">
               <h2 className="font-semibold text-gray-900 mb-3">Daily Goal</h2>
@@ -491,30 +541,54 @@ const StudentDashboardPage = () => {
                 <p className="text-gray-500 text-sm">No upcoming events</p>
               </div>
             </div>
-
-            {/* Recommendations */}
-            <div className="bg-white rounded-xl border border-gray-200 p-6">
-              <h2 className="font-semibold text-gray-900 mb-4">Quick Actions</h2>
-              <div className="space-y-3">
-                <Link 
-                  to="/quiz-page"
-                  className="block p-4 bg-blue-50 border border-blue-200 rounded-lg hover:bg-blue-100 transition-colors"
-                >
-                  <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-blue-100 rounded-lg flex items-center justify-center">
-                      <span className="text-xl">📝</span>
-                    </div>
-                    <div>
-                      <h3 className="font-medium text-gray-900">Take a Quiz</h3>
-                      <p className="text-sm text-gray-500">Test your knowledge</p>
-                    </div>
-                  </div>
-                </Link>
-              </div>
-            </div>
           </div>
         </div>
       </div>
+
+      {/* Mobile Bottom Navigation */}
+      <nav className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 md:hidden z-40 safe-area-bottom">
+        <div className="flex items-center justify-around py-2">
+          <Link 
+            to="/student-dashboard" 
+            className="flex flex-col items-center py-2 px-4 text-blue-600"
+          >
+            <svg className="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+              <path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z" />
+            </svg>
+            <span className="text-xs mt-1 font-medium">Home</span>
+          </Link>
+          
+          <Link 
+            to="/quiz-page" 
+            className="flex flex-col items-center py-2 px-4 text-gray-500"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+            </svg>
+            <span className="text-xs mt-1">Quiz</span>
+          </Link>
+          
+          <button
+            onClick={() => {
+              localStorage.removeItem('token');
+              localStorage.removeItem('refreshToken');
+              localStorage.removeItem('user');
+              localStorage.removeItem('loginResponse');
+              localStorage.removeItem('avgScore');
+              navigate('/');
+            }}
+            className="flex flex-col items-center py-2 px-4 text-gray-500"
+          >
+            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" />
+            </svg>
+            <span className="text-xs mt-1">Logout</span>
+          </button>
+        </div>
+      </nav>
+
+      {/* Spacer for mobile bottom nav */}
+      <div className="h-20 md:hidden"></div>
     </div>
   );
 };

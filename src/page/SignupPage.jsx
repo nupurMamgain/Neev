@@ -192,17 +192,6 @@ const SignupPage = () => {
                   ))}
                 </select>
               </div>
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Phone</label>
-                <input
-                  type="tel"
-                  name="Ph_num"
-                  value={formData.Ph_num}
-                  onChange={handleChange}
-                  placeholder="Phone number"
-                  className="w-full px-4 py-3 border border-gray-300 rounded-xl text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                />
-              </div>
             </div>
 
             <button

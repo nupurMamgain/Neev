@@ -158,7 +158,7 @@ const QuizPage = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
               </svg>
             </div>
-            <h1 className="text-2xl font-semibold text-gray-900 mb-2">Chapter {chapterId} Quiz</h1>
+            <h1 className="text-2xl font-semibold text-gray-900 mb-2">AI Smart Quiz</h1>
             <p className="text-gray-500 mb-6">Test your understanding with AI-generated questions</p>
             
             <div className="flex justify-center gap-8 mb-6 text-sm">

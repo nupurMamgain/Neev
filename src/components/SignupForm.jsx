@@ -84,13 +84,13 @@ const SignupForm = () => {
                     className="text-black w-1/2 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 placeholder-gray-400 text-sm"
                     required
                   />
-                  <input 
+                  {/* <input 
                     type="password"
                     name='password2' 
                     placeholder="Confirm password *" 
                     className="text-black w-1/2 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 placeholder-gray-400 text-sm"
                     required
-                  />
+                  /> */}
                 </div>
 
                 {/* Select Class and Phone Number */}
@@ -123,12 +123,12 @@ const SignupForm = () => {
                   </div>
                   
                   {/* Phone Number */}
-                  <input 
+                  {/* <input 
                     type="tel" 
                     placeholder="Phone Number" 
                     name='Ph_num'
                     className="text-black w-1/2 px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-1 focus:ring-blue-500 placeholder-gray-400 text-sm"
-                  />
+                  /> */}
                 </div>
                 
                 {/* Register Button */}
