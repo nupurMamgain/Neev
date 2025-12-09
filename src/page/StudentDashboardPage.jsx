@@ -374,7 +374,7 @@ const StudentDashboardPage = () => {
                           {chapters.map((chapter, index) => (
                             <Link
                               key={chapter.id || index}
-                              to={`/chapter/${chapter.id}?subject=${expandedSubject}`}
+                              to={`/chapter/${chapter.id}?subject=${expandedSubject}&chapterName=${encodeURIComponent(chapter.name || chapter.title || chapter.chapter_name || '')}&subjectName=${encodeURIComponent(userSubjects.find(s => s.id === expandedSubject)?.name || '')}`}
                               className="group bg-white rounded-lg border border-gray-200 p-4 hover:shadow-md hover:border-blue-300 transition-all"
                             >
                               <div className="flex items-start gap-3">
@@ -479,7 +479,7 @@ const StudentDashboardPage = () => {
               <h2 className="font-semibold text-gray-900 mb-4">Quick Quizzes</h2>
               <div className="grid grid-cols-2 gap-3">
                 <Link 
-                  to="/quiz-page?chapter=3&subject=1"
+                  to="/quiz-page?chapter=3&subject=1&chapterName=Linear%20Equations&subjectName=Maths"
                   className="p-4 bg-blue-50 border border-blue-200 rounded-xl hover:bg-blue-100 hover:shadow-md transition-all text-center group"
                 >
                   <div className="w-12 h-12 bg-blue-100 rounded-xl flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
@@ -490,18 +490,18 @@ const StudentDashboardPage = () => {
                 </Link>
                 
                 <Link 
-                  to="/quiz-page?chapter=4&subject=3"
+                  to="/quiz-page?chapter=4&subject=3&chapterName=Democratic%20Politics&subjectName=Political%20Science"
                   className="p-4 bg-purple-50 border border-purple-200 rounded-xl hover:bg-purple-100 hover:shadow-md transition-all text-center group"
                 >
                   <div className="w-12 h-12 bg-purple-100 rounded-xl flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
                     <span className="text-2xl">📚</span>
                   </div>
-                  <h3 className="font-medium text-purple-700 text-sm">Political Scince</h3>
+                  <h3 className="font-medium text-purple-700 text-sm">Political Science</h3>
                   <p className="text-xs text-gray-500 mt-1">10 Questions</p>
                 </Link>
                 
                 <Link 
-                  to="/quiz-page?chapter=16&subject=16"
+                  to="/quiz-page?chapter=16&subject=16&chapterName=Physical%20Features&subjectName=Geography"
                   className="p-4 bg-emerald-50 border border-emerald-200 rounded-xl hover:bg-emerald-100 hover:shadow-md transition-all text-center group"
                 >
                   <div className="w-12 h-12 bg-emerald-100 rounded-xl flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">
@@ -512,7 +512,7 @@ const StudentDashboardPage = () => {
                 </Link>
                 
                 <Link 
-                  to="/quiz-page?chapter=2&subject=2"
+                  to="/quiz-page?chapter=2&subject=2&chapterName=Village%20Palampur&subjectName=Social%20Science"
                   className="p-4 bg-teal-50 border border-teal-200 rounded-xl hover:bg-teal-100 hover:shadow-md transition-all text-center group"
                 >
                   <div className="w-12 h-12 bg-teal-100 rounded-xl flex items-center justify-center mx-auto mb-2 group-hover:scale-110 transition-transform">

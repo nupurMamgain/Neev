@@ -6,6 +6,8 @@ const ChapterPage = () => {
   const [searchParams] = useSearchParams();
   const navigate = useNavigate();
   const subjectId = searchParams.get('subject');
+  const chapterName = searchParams.get('chapterName') || '';
+  const subjectName = searchParams.get('subjectName') || '';
   
   const [pdfUrl, setPdfUrl] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -160,8 +162,12 @@ const ChapterPage = () => {
                   </svg>
                 </div>
                 <div>
-                  {/* <h1 className="font-semibold text-gray-900">Chapter {chapterId}</h1> */}
-                  <p className="text-xs text-gray-500">Study Material</p>
+                  {subjectName && (
+                    <span className="text-xs text-blue-600 font-medium">{subjectName}</span>
+                  )}
+                  <h1 className="font-semibold text-gray-900 text-sm">
+                    {chapterName || `Chapter ${chapterId}`}
+                  </h1>
                 </div>
               </div>
             </div>
@@ -180,7 +186,7 @@ const ChapterPage = () => {
                 </a>
               )}
               <Link
-                to={`/quiz-page?chapter=${chapterId}&subject=${subjectId || ''}`}
+                to={`/quiz-page?chapter=${chapterId}&subject=${subjectId || ''}&chapterName=${encodeURIComponent(chapterName)}&subjectName=${encodeURIComponent(subjectName)}`}
                 className="px-5 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors flex items-center gap-2"
               >
                 <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
