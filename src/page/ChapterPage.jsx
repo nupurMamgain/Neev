@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { Link, useParams, useSearchParams, useNavigate } from 'react-router-dom';
 
 const ChapterPage = () => {
@@ -11,6 +11,14 @@ const ChapterPage = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [chapterInfo, setChapterInfo] = useState(null);
+  
+  // Chat state
+  const [showChat, setShowChat] = useState(false);
+  const [messages, setMessages] = useState([]);
+  const [inputMessage, setInputMessage] = useState('');
+  const [chatLoading, setChatLoading] = useState(false);
+  const chatEndRef = useRef(null);
+  const inputRef = useRef(null);
 
   useEffect(() => {
     const token = localStorage.getItem('token');
@@ -58,6 +66,77 @@ const ChapterPage = () => {
       }
     };
   }, [chapterId]);
+
+  // Scroll to bottom of chat when new messages arrive
+  useEffect(() => {
+    if (chatEndRef.current) {
+      chatEndRef.current.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [messages]);
+
+  // Focus input when chat opens
+  useEffect(() => {
+    if (showChat && inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [showChat]);
+
+  const sendMessage = async (e) => {
+    e.preventDefault();
+    if (!inputMessage.trim() || chatLoading) return;
+
+    const userMessage = inputMessage.trim();
+    setInputMessage('');
+    
+    // Add user message to chat
+    setMessages(prev => [...prev, { type: 'user', content: userMessage }]);
+    setChatLoading(true);
+
+    try {
+      const pickleFilename = `chapter${chapterId}.pkl`;
+      
+      const response = await fetch('/local/chat/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          question: userMessage,
+          level: 1,
+          pickle_filename: pickleFilename,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to get response');
+      }
+
+      const data = await response.json();
+      
+      if (data.success && data.response) {
+        const botResponse = {
+          type: 'bot',
+          content: data.response.answer,
+          topic: data.response.topic,
+          keyPoints: data.response.key_points,
+          summary: data.response.summary,
+          isRelated: data.response.is_related,
+        };
+        setMessages(prev => [...prev, botResponse]);
+      } else {
+        throw new Error('Invalid response');
+      }
+    } catch (err) {
+      console.error('Chat error:', err);
+      setMessages(prev => [...prev, {
+        type: 'bot',
+        content: "Sorry, I couldn't process your question. Please try again.",
+        isError: true,
+      }]);
+    } finally {
+      setChatLoading(false);
+    }
+  };
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -154,6 +233,170 @@ const ChapterPage = () => {
           />
         ) : null}
       </div>
+
+      {/* Chat Toggle Button */}
+      <button
+        onClick={() => setShowChat(!showChat)}
+        className={`fixed bottom-6 right-6 w-14 h-14 rounded-full shadow-lg flex items-center justify-center transition-all z-50 ${
+          showChat ? 'bg-gray-600 hover:bg-gray-700' : 'bg-blue-600 hover:bg-blue-700'
+        }`}
+      >
+        {showChat ? (
+          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+          </svg>
+        ) : (
+          <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
+          </svg>
+        )}
+      </button>
+
+      {/* Chat Panel */}
+      {showChat && (
+        <div className="fixed bottom-24 right-6 w-[360px] max-w-[calc(100vw-48px)] h-[500px] max-h-[calc(100vh-200px)] bg-white rounded-2xl shadow-2xl border border-gray-200 flex flex-col overflow-hidden z-50 animate-slide-up">
+          {/* Chat Header */}
+          <div className="bg-blue-600 text-white px-4 py-3 flex items-center gap-3">
+            <div className="w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center">
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
+              </svg>
+            </div>
+            <div className="flex-1">
+              <h3 className="font-semibold">Ask AI Tutor</h3>
+              <p className="text-xs text-blue-200">Ask anything about this chapter</p>
+            </div>
+            <button
+              onClick={() => setShowChat(false)}
+              className="p-1 hover:bg-blue-500 rounded-lg transition-colors"
+            >
+              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+
+          {/* Chat Messages */}
+          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-gray-50">
+            {messages.length === 0 && (
+              <div className="text-center py-8">
+                <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <h4 className="font-medium text-gray-900 mb-1">Hi! I'm your AI Tutor</h4>
+                <p className="text-sm text-gray-500">Ask me anything about this chapter</p>
+                <div className="mt-4 space-y-2">
+                  <button
+                    onClick={() => setInputMessage("Explain the main concept")}
+                    className="block w-full text-left px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                  >
+                    💡 Explain the main concept
+                  </button>
+                  <button
+                    onClick={() => setInputMessage("Give me a summary")}
+                    className="block w-full text-left px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                  >
+                    📝 Give me a summary
+                  </button>
+                  <button
+                    onClick={() => setInputMessage("What are the key points?")}
+                    className="block w-full text-left px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                  >
+                    🎯 What are the key points?
+                  </button>
+                </div>
+              </div>
+            )}
+
+            {messages.map((msg, index) => (
+              <div
+                key={index}
+                className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}
+              >
+                {msg.type === 'user' ? (
+                  <div className="max-w-[80%] bg-blue-600 text-white px-4 py-2 rounded-2xl rounded-br-md">
+                    <p className="text-sm">{msg.content}</p>
+                  </div>
+                ) : (
+                  <div className={`max-w-[85%] ${msg.isError ? 'bg-red-50 border border-red-200' : 'bg-white border border-gray-200'} px-4 py-3 rounded-2xl rounded-bl-md shadow-sm`}>
+                    {msg.topic && !msg.isError && (
+                      <span className="inline-block px-2 py-0.5 bg-blue-100 text-blue-700 text-xs font-medium rounded-full mb-2">
+                        {msg.topic}
+                      </span>
+                    )}
+                    <p className={`text-sm ${msg.isError ? 'text-red-600' : 'text-gray-800'} whitespace-pre-wrap`}>
+                      {msg.content}
+                    </p>
+                    
+                    {msg.keyPoints && msg.keyPoints.length > 0 && (
+                      <div className="mt-3 pt-3 border-t border-gray-100">
+                        <p className="text-xs font-semibold text-gray-500 mb-2">KEY POINTS:</p>
+                        <ul className="space-y-1">
+                          {msg.keyPoints.map((point, i) => (
+                            <li key={i} className="text-xs text-gray-600 flex items-start gap-2">
+                              <span className="text-blue-500 mt-0.5">•</span>
+                              <span>{point}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
+                    )}
+                    
+                    {msg.summary && (
+                      <div className="mt-3 pt-3 border-t border-gray-100">
+                        <p className="text-xs text-gray-500 italic">💡 {msg.summary}</p>
+                      </div>
+                    )}
+                  </div>
+                )}
+              </div>
+            ))}
+
+            {chatLoading && (
+              <div className="flex justify-start">
+                <div className="bg-white border border-gray-200 px-4 py-3 rounded-2xl rounded-bl-md shadow-sm">
+                  <div className="flex items-center gap-2">
+                    <div className="flex gap-1">
+                      <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
+                      <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
+                      <div className="w-2 h-2 bg-blue-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+                    </div>
+                    <span className="text-sm text-gray-500">Thinking...</span>
+                  </div>
+                </div>
+              </div>
+            )}
+
+            <div ref={chatEndRef} />
+          </div>
+
+          {/* Chat Input */}
+          <form onSubmit={sendMessage} className="p-3 bg-white border-t border-gray-200">
+            <div className="flex items-center gap-2">
+              <input
+                ref={inputRef}
+                type="text"
+                value={inputMessage}
+                onChange={(e) => setInputMessage(e.target.value)}
+                placeholder="Ask a question..."
+                className="flex-1 px-4 py-2 bg-gray-100 border border-transparent rounded-full text-sm text-gray-900 placeholder-gray-500 focus:outline-none focus:bg-white focus:border-blue-500 transition-colors"
+                disabled={chatLoading}
+              />
+              <button
+                type="submit"
+                disabled={!inputMessage.trim() || chatLoading}
+                className="w-10 h-10 bg-blue-600 text-white rounded-full flex items-center justify-center hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              >
+                <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                </svg>
+              </button>
+            </div>
+          </form>
+        </div>
+      )}
     </div>
   );
 };
