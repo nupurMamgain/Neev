@@ -31,15 +31,34 @@ const LoginPage = () => {
       });
 
       const data = await response.json();
+      console.log('Login response:', data);
 
       if (!response.ok) {
         throw new Error(data.message || data.detail || 'Login failed. Please check your credentials.');
       }
 
-      // Store token/user data if returned by API
-      if (data.token) {
+      // Clear any existing auth data first
+      localStorage.removeItem('loginResponse');
+      localStorage.removeItem('token');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('user');
+
+      // Save entire response to localStorage
+      localStorage.setItem('loginResponse', JSON.stringify(data));
+      
+      // Save access token
+      if (data.access) {
+        localStorage.setItem('token', data.access);
+      } else if (data.token) {
         localStorage.setItem('token', data.token);
       }
+      
+      // Save refresh token
+      if (data.refresh) {
+        localStorage.setItem('refreshToken', data.refresh);
+      }
+      
+      // Save user data
       if (data.user) {
         localStorage.setItem('user', JSON.stringify(data.user));
       }

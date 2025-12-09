@@ -1,13 +1,40 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useSearchParams } from 'react-router-dom';
 
 const QuizPage = () => {
+  const [searchParams] = useSearchParams();
+  const chapterId = searchParams.get('chapter') || '1';
+  const subjectId = searchParams.get('subject') || '';
+  
   const [quizState, setQuizState] = useState('start');
   const [questions, setQuestions] = useState([]);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState({});
   const [score, setScore] = useState(0);
   const [error, setError] = useState(null);
+
+  // Calculate difficulty level based on avg_score from localStorage
+  const getDifficultyLevel = () => {
+    const avgScore = parseFloat(localStorage.getItem('avgScore')) || 0;
+    
+    // Difficulty ranges from 1-10
+    // Higher avg_score = higher difficulty (more challenging)
+    // Lower avg_score = lower difficulty (easier questions)
+    if (avgScore >= 80) return 10;      // Expert level
+    if (avgScore >= 70) return 8;       // Hard
+    if (avgScore >= 60) return 6;       // Medium-Hard
+    if (avgScore >= 50) return 5;       // Medium
+    if (avgScore >= 40) return 4;       // Medium-Easy
+    if (avgScore >= 30) return 3;       // Easy
+    return 2;                            // Beginner
+  };
+
+  const getDifficultyLabel = () => {
+    const level = getDifficultyLevel();
+    if (level >= 8) return 'Hard';
+    if (level >= 5) return 'Medium';
+    return 'Easy';
+  };
 
   const parseChoicesString = (choicesStr) => {
     if (!choicesStr) return [];
@@ -33,11 +60,16 @@ const QuizPage = () => {
     setQuizState('loading');
     setError(null);
     try {
+      // Use chapter ID to generate pickle filename (e.g., chapter2.pkl)
+      const pickleFilename = `chapter${chapterId}.pkl`;
+      // Get difficulty level based on student's average score
+      const difficultyLevel = getDifficultyLevel();
+      console.log(`Starting quiz with difficulty level: ${difficultyLevel}`);
 
       const response = await fetch('/local/generate-mcqs/', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ difficulty_level: 8, pickle_filename: 'data.pkl' }),
+        body: JSON.stringify({ difficulty_level: difficultyLevel, pickle_filename: pickleFilename }),
       });
       if (!response.ok) throw new Error('Failed to fetch quiz');
       const data = await response.json();
@@ -69,10 +101,34 @@ const QuizPage = () => {
     setSelectedAnswers(prev => ({ ...prev, [questionNo]: option }));
   };
 
-  const calculateScore = () => {
+  const calculateScore = async () => {
     let correct = 0;
     questions.forEach(q => { if (selectedAnswers[q.question_no] === q.correct) correct++; });
     setScore(correct);
+    
+    // Calculate percentage score (0-100)
+    const percentage = Math.round((correct / questions.length) * 100);
+    
+    // Submit quiz response to API
+    try {
+      const token = localStorage.getItem('token');
+      await fetch('/api/quiz-response/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          quiz: chapterId,
+          score: percentage,
+          is_completed: true,
+          chapter_id: chapterId,
+        }),
+      });
+    } catch (err) {
+      console.error('Failed to submit quiz response:', err);
+    }
+    
     setQuizState('result');
   };
 
@@ -102,12 +158,18 @@ const QuizPage = () => {
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
               </svg>
             </div>
-            <h1 className="text-2xl font-semibold text-gray-900 mb-2">AI Knowledge Quiz</h1>
+            <h1 className="text-2xl font-semibold text-gray-900 mb-2">Chapter {chapterId} Quiz</h1>
             <p className="text-gray-500 mb-6">Test your understanding with AI-generated questions</p>
             
             <div className="flex justify-center gap-8 mb-6 text-sm">
               <div><p className="text-2xl font-semibold text-gray-900">10</p><p className="text-gray-500">Questions</p></div>
-              <div><p className="text-2xl font-semibold text-gray-900">Hard</p><p className="text-gray-500">Difficulty</p></div>
+              <div>
+                <p className={`text-2xl font-semibold ${
+                  getDifficultyLabel() === 'Hard' ? 'text-red-600' : 
+                  getDifficultyLabel() === 'Medium' ? 'text-yellow-600' : 'text-green-600'
+                }`}>{getDifficultyLabel()}</p>
+                <p className="text-gray-500">Difficulty</p>
+              </div>
             </div>
 
             {error && <p className="text-red-500 text-sm mb-4">{error}</p>}

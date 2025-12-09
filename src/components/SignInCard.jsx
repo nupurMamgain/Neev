@@ -5,11 +5,80 @@ import { useNavigate } from "react-router-dom";
 
 function SignInCard() {
   const [activeTab, setActiveTab] = useState('English');
-   const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const [showPassword, setShowPassword] = useState(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const tabs = ['English', 'हिन्दी', 'ਪੰਜਾਬੀ'];
+
+  const handleLogin = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    setError('');
+
+    try {
+      const response = await fetch('/api/login/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email, password }),
+      });
+
+      const data = await response.json();
+      console.log('Login response:', data);
+
+      if (!response.ok) {
+        throw new Error(data.message || data.detail || 'Login failed');
+      }
+
+      // Clear any existing auth data first
+      localStorage.removeItem('loginResponse');
+      localStorage.removeItem('token');
+      localStorage.removeItem('refreshToken');
+      localStorage.removeItem('user');
+
+      // Save entire response to localStorage
+      localStorage.setItem('loginResponse', JSON.stringify(data));
+      console.log('Saved loginResponse');
+      
+      // Save access token
+      if (data.access) {
+        localStorage.setItem('token', data.access);
+        console.log('Saved access token');
+      } else if (data.token) {
+        localStorage.setItem('token', data.token);
+        console.log('Saved token');
+      }
+      
+      // Save refresh token
+      if (data.refresh) {
+        localStorage.setItem('refreshToken', data.refresh);
+        console.log('Saved refresh token');
+      }
+      
+      // Save user data
+      if (data.user) {
+        localStorage.setItem('user', JSON.stringify(data.user));
+        console.log('Saved user:', data.user);
+      }
+
+      // Verify data was saved
+      console.log('Stored token:', localStorage.getItem('token'));
+      console.log('Stored user:', localStorage.getItem('user'));
+
+      // Navigate to dashboard on success
+      navigate('/student-dashboard');
+    } catch (err) {
+      setError(err.message || 'Something went wrong. Please try again.');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   // This is the primary color used for buttons/tabs: a blue-to-purple gradient.
   const primaryGradient = 'bg-gradient-to-r from-[#4E7BEF] to-[#7B4EEF]';
@@ -40,7 +109,13 @@ function SignInCard() {
       </div>
 
       {/* 🔑 Login Form */}
-      <form onSubmit={(e) => { e.preventDefault(); navigate("/student-dashboard"); }}>
+      <form onSubmit={handleLogin}>
+        {/* Error Message */}
+        {error && (
+          <div className="mb-4 p-3 bg-red-50 border border-red-200 rounded-lg text-red-600 text-sm">
+            {error}
+          </div>
+        )}
 
         {/* Email Field */}
         <div className="mb-4">
@@ -49,9 +124,12 @@ function SignInCard() {
           </label>
           <input
             type="email"
-            placeholder ="you@example.com"
+            placeholder="you@example.com"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
             className="text-black w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-[#4E7BEF] focus:border-[#4E7BEF] transition duration-150"
             required
+            disabled={loading}
           />
         </div>
 
@@ -64,8 +142,11 @@ function SignInCard() {
             <input
               type={showPassword ? 'text' : 'password'}
               placeholder="**********"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
               className="text-black w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-[#4E7BEF] focus:border-[#4E7BEF] pr-10 transition duration-150"
               required
+              disabled={loading}
             />
             <button
               type="button"
@@ -97,10 +178,23 @@ function SignInCard() {
         {/* ➡️ Sign In Button */}
         <button
           type="submit"
-          className={`w-full py-3 text-lg font-semibold text-white rounded-lg shadow-md transition duration-200 ${primaryGradient} ${primaryGradientHover} flex items-center justify-center`}
+          disabled={loading}
+          className={`w-full py-3 text-lg font-semibold text-white rounded-lg shadow-md transition duration-200 ${primaryGradient} ${primaryGradientHover} flex items-center justify-center disabled:opacity-70 disabled:cursor-not-allowed`}
         >
-          Sign In to Dashboard
-          <span className="ml-2">→</span>
+          {loading ? (
+            <>
+              <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+              </svg>
+              Signing In...
+            </>
+          ) : (
+            <>
+              Sign In to Dashboard
+              <span className="ml-2">→</span>
+            </>
+          )}
         </button>
       </form>
 

@@ -35,9 +35,7 @@ const SignupPage = () => {
 
     setLoading(true);
     try {
-      const response = await fetch('/api/signup/', {
-        // 👉 yahan apna actual endpoint path lagana:
-        // e.g. '/api/register/', '/api/student-register/' etc
+      const response = await fetch('/api/student-registration/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -47,7 +45,6 @@ const SignupPage = () => {
           email: formData.email,
           password: formData.password,
           class_obj: formData.classes
-          //Ph_num: formData.Ph_num//
         }),
       });
 

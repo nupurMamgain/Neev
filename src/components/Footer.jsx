@@ -11,7 +11,7 @@ const Footer = () => {
             <div className="w-6 h-6 bg-blue-600 rounded flex items-center justify-center">
               <span className="text-white font-bold text-xs">N</span>
             </div>
-            <span className="text-gray-600 text-sm">© 2025 NEEV by EduRural</span>
+            <span className="text-gray-600 text-sm">© 2025 NEEV </span>
           </div>
 
           {/* Links */}
