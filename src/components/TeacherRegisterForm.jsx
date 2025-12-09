@@ -1,148 +1,136 @@
-import React, { useEffect, useState } from "react";
+// src/components/TeacherRegisterForm.jsx
+import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const TeacherRegisterForm = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    password: "",
-    subjects: [],
-  });
+  const navigate = useNavigate();
 
-  const [allSubjects, setAllSubjects] = useState([]);
-  const [loading, setLoading] = useState(false);
-  const [msg, setMsg] = useState("");
-
-  useEffect(() => {
-    const loadSubjects = async () => {
-      try {
-      {/*  const data = await getSubjects();*/}
-        setAllSubjects(data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-    loadSubjects();
-  }, []);
-
-  const handleChange = (e) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-    setMsg("");
-  };
-
-  const handleSubjectSelect = (id) => {
-    setFormData((prev) => {
-      const already = prev.subjects.includes(id);
-      return {
-        ...prev,
-        subjects: already
-          ? prev.subjects.filter((sub) => sub !== id)
-          : [...prev.subjects, id],
-      };
-    });
-  };
-  const signupTeacher = async ({ name, email, password, subjects }) => {
-  try {
-    const res = await axiosClient.post("/api/teacher-registration/", {
-      name,
-      email,
-      password,
-      subjects, // Array: [1,2,...]
-    });
-    return res.data;
-  } catch (error) {
-    throw new Error(extractError(error, "Teacher signup failed"));
-  }
-};
-
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
-    setLoading(true);
-    setMsg("");
+    const formData = new FormData(e.target);
+    console.log(Object.fromEntries(formData.entries()));
 
-    try {
-      const res = await signupTeacher(formData);
-      console.log("Teacher registered:", res);
-      setMsg("Teacher registered successfully!");
-    } catch (err) {
-      console.error(err);
-      setMsg(err.message);
-    } finally {
-      setLoading(false);
-    }
+    // ✅ yahan se teacher dashboard pe bhej de
+    navigate("/teacher-dashboard");
   };
 
   return (
-    <form onSubmit={handleSubmit} className="p-8 space-y-6">
-      <h2 className="text-xl font-semibold text-gray-800 text-center">
-        Teacher Registration
-      </h2>
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-[#eef3ff] to-[#e8f6ff] px-4 py-10">
+      <div className="w-full max-w-md bg-white rounded-3xl shadow-xl p-8 text-gray-800">
+        {/* Heading */}
+        <h1 className="text-2xl font-bold text-center text-[#152857] mb-6">
+          Teacher Registration
+        </h1>
 
-      {msg && (
-        <p className="text-center text-sm p-2 rounded bg-blue-50 text-blue-700">
-          {msg}
-        </p>
-      )}
-
-      <div>
-        <label className="block text-sm font-medium mb-2">Name</label>
-        <input
-          type="text"
-          name="name"
-          className="w-full p-3 border rounded-lg"
-          value={formData.name}
-          onChange={handleChange}
-          required
-        />
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium mb-2">Email</label>
-        <input
-          type="email"
-          name="email"
-          className="w-full p-3 border rounded-lg"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium mb-2">Password</label>
-        <input
-          type="password"
-          name="password"
-          className="w-full p-3 border rounded-lg"
-          value={formData.password}
-          onChange={handleChange}
-          required
-        />
-      </div>
-
-      <div>
-        <label className="block text-sm font-medium mb-2">Select Subjects</label>
-        <div className="space-y-2">
-          {allSubjects.map((sub) => (
-            <label key={sub.id} className="flex items-center gap-2">
-              <input
-                type="checkbox"
-                checked={formData.subjects.includes(sub.id)}
-                onChange={() => handleSubjectSelect(sub.id)}
-              />
-              <span>{sub.name} (Class {sub.class_obj})</span>
+        <form onSubmit={handleSubmit} className="space-y-5">
+          {/* Full Name */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">
+              Full Name
             </label>
-          ))}
-        </div>
-      </div>
+            <input
+              type="text"
+              name="fullName"
+              placeholder="Enter your full name"
+              className="w-full p-3 rounded-xl border border-gray-200 bg-gray-50
+                         placeholder-gray-500 outline-none focus:ring-2 focus:ring-blue-200"
+            />
+          </div>
 
-      <button
-        type="submit"
-        disabled={loading}
-        className="w-full bg-blue-600 text-white p-3 rounded-lg hover:bg-blue-700"
-      >
-        {loading ? "Registering..." : "Register as Teacher"}
-      </button>
-    </form>
+          {/* Email */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">
+              Email
+            </label>
+            <input
+              type="email"
+              name="email"
+              placeholder="Enter your email"
+              className="w-full p-3 rounded-xl border border-gray-200 bg-gray-50
+                         placeholder-gray-500 outline-none focus:ring-2 focus:ring-blue-200"
+            />
+          </div>
+
+          {/* Password */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">
+              Password
+            </label>
+            <input
+              type="password"
+              name="password"
+              placeholder="Enter password"
+              className="w-full p-3 rounded-xl border border-gray-200 bg-gray-50
+                         placeholder-gray-500 outline-none focus:ring-2 focus:ring-blue-200"
+            />
+          </div>
+
+          {/* Confirm Password */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">
+              Confirm Password
+            </label>
+            <input
+              type="password"
+              name="confirmPassword"
+              placeholder="Re-enter password"
+              className="w-full p-3 rounded-xl border border-gray-200 bg-gray-50
+                         placeholder-gray-500 outline-none focus:ring-2 focus:ring-blue-200"
+            />
+          </div>
+
+          {/* Phone */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">
+              Phone
+            </label>
+            <input
+              type="text"
+              name="phone"
+              placeholder="e.g. +91 98765 43210"
+              className="w-full p-3 rounded-xl border border-gray-200 bg-gray-50
+                         placeholder-gray-500 outline-none focus:ring-2 focus:ring-blue-200"
+            />
+          </div>
+
+          {/* School */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">
+              School
+            </label>
+            <input
+              type="text"
+              name="school"
+              placeholder="Enter school name"
+              className="w-full p-3 rounded-xl border border-gray-200 bg-gray-50
+                         placeholder-gray-500 outline-none focus:ring-2 focus:ring-blue-200"
+            />
+          </div>
+
+          {/* Experience */}
+          <div>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">
+              Years of Experience
+            </label>
+            <input
+              type="number"
+              name="experience"
+              placeholder="e.g. 3"
+              className="w-full p-3 rounded-xl border border-gray-200 bg-gray-50
+                         placeholder-gray-500 outline-none focus:ring-2 focus:ring-blue-200"
+            />
+          </div>
+
+          {/* Button */}
+          <button
+            type="submit"
+            className="mt-4 w-full bg-blue-600 text-white py-3 rounded-xl text-lg font-semibold hover:bg-blue-700 transition"
+          >
+            Register as Teacher
+          </button>
+        </form>
+      </div>
+    </div>
   );
 };
 
